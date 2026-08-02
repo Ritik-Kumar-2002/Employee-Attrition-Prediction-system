@@ -1,14 +1,15 @@
-import plotly.express as px
 import streamlit as st
+import plotly.express as px
 
-def plot_lineChart(df, xaxis, yaxis, title):
-    fig = px.line(
-        df,
-        x = xaxis,
-        y = yaxis,
-        title=title,
-        color_discrete_sequence=["#80b3ff"]   
-    )
+def plot_histogram(df, xaxis, yaxis, title):
+    fig = px.bar(
+            df,
+            x = xaxis,
+            y = yaxis,
+            title=title,
+            orientation='h',
+            color_discrete_sequence=["#2061c3"],  
+        )
     fig.update_layout(
 
         # Title

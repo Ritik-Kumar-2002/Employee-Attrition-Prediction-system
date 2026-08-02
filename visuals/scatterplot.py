@@ -1,16 +1,15 @@
-import plotly.express as px
 import streamlit as st
+import plotly.express as px
 
-def plot_lineChart(df, xaxis, yaxis, title):
-    fig = px.line(
-        df,
+def plot_scatterplot(df, xaxis, yaxis, title):
+    fig = px.scatter(
+        df, 
         x = xaxis,
         y = yaxis,
-        title=title,
-        color_discrete_sequence=["#80b3ff"]   
+        title=title
     )
     fig.update_layout(
-
+    
         # Title
         title={
             "text": title,

@@ -1,16 +1,16 @@
-import plotly.express as px
 import streamlit as st
+import plotly.express as px
 
-def plot_lineChart(df, xaxis, yaxis, title):
-    fig = px.line(
-        df,
+def plot_boxplot(df, xaxis, yaxis, title):
+    fig = px.box(
+        df, 
         x = xaxis,
         y = yaxis,
         title=title,
-        color_discrete_sequence=["#80b3ff"]   
+        orientation='h'
     )
     fig.update_layout(
-
+    
         # Title
         title={
             "text": title,

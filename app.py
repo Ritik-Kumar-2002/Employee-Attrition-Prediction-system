@@ -3,11 +3,34 @@
 import streamlit as st
 import numpy as np 
 
-from dataset.Load_dataset import load_dataset
-from visuals.bar_chart import plotbar_chart
+# Load Dataset
+# ------------------------------------------------------------------------------------------
+from src.Load_dataset import load_dataset
+
+# Import Graphs 
+# ------------------------------------------------------------------------------------------
+from visuals.bar_chart import plot_barChart
+from visuals.pie_chart import plot_pieChart
+from visuals.donut_chart import plot_donut
+from visuals.histogram import plot_histogram
+from visuals.scatterplot import plot_scatterplot
+from visuals.boxplot import plot_boxplot
+from visuals.line_chart import plot_lineChart
+
 
 # ------------------------------------------------------------------------------------------
+
+
+# Import preprocessing Components
+# ------------------------------------------------------------------------------------------
+from src.data_cleaning import clean_data
+from src.feature_selection import select_features
+from src.feature_encoding import encode_features
+from src.train_test_split import split_data
+from src.feature_scaling import scale_features
+
 # set page configuration
+# ------------------------------------------------------------------------------------------
 st.set_page_config(
     page_title='HR Analytics Dashboard',
     page_icon='📊',
@@ -134,31 +157,104 @@ Employee Attrition Visuals
 """, unsafe_allow_html=True)
 
 # Plot Graphs
-#------------------------------------------------------------------------------------------
-col1, col2, col3, col4 = st.columns([1,1,1,1])
+# -----------------------------------------------------------------------------------------------------------------------
+col1, col2, col3 = st.columns([1,1,2])
 
 # Attrition by Gender wise
 with col1:
-    gender_attrition = df[df['Attrition'] == 'Yes'].groupby('Gender').size()
-    print('Gender Attrition: ',gender_attrition)
-    # plotbar_chart(gender_attrition)
-    st.bar_chart(gender_attrition)
+    with st.container(border=False):
+        gender_attrition = df[df['Attrition'] == 'Yes'].groupby('Gender').size().reset_index(name='Attrition')
+        plot_barChart(gender_attrition, 'Gender', 'Attrition', 'Gender based Attrition')
 
 # Attrition by Department wise
 with col2:
-    department_attrition = df[df['Attrition'] == 'Yes'].groupby('Department').size()
-    st.bar_chart(department_attrition)
+    with st.container(border=False):
+        department_attrition = df[df['Attrition'] == 'Yes'].groupby('Department').size().reset_index(name='Attrition')
+        plot_barChart(department_attrition, 'Department', 'Attrition', 'Department based Attrition')
 
 # Attrition by Job Role wise
 with col3:
-    jobRole_attrition = df[df['Attrition'] == 'Yes'].groupby('JobRole').size()
-    st.bar_chart(jobRole_attrition)
+    with st.container(border=False):
+        jobRole_attrition = df[df['Attrition'] == 'Yes'].groupby('JobRole').size().reset_index(name='Attrition')
+        plot_pieChart(jobRole_attrition, 'JobRole', 'Attrition', 'Job Role based Attrition')
+
+
+# -----------------------------------------------------------------------------------------------------------------------
+col1, col2, col3, col4 = st.columns([1,1,1,1])
 
 # Attrition by Education wise
-with col4:
-    education_attrition = df[df['Attrition'] == 'Yes'].groupby('Education').size()
-    st.bar_chart(education_attrition, color='#80b3ff')
-    
+with col1:
+    with st.container(border=False):
+        education_attrition = df[df['Attrition'] == 'Yes'].groupby('Education').size().reset_index(name='Attrition')
+        plot_barChart(education_attrition, 'Education', 'Attrition', 'Education wise Attrition')
+
+# Attrition based on Overtime
+with col2:
+    with st.container(border=False):
+            overtime_attrition = df[df['Attrition'] == 'Yes'].groupby('OverTime').size().reset_index(name='Attrition')
+            plot_barChart(overtime_attrition, 'OverTime', 'Attrition', 'OverTime wise Attrition')
+
+# Attrition based on Marital Status
+with col3:
+    with st.container(border=False):
+            maritalStatus_attrition = df[df['Attrition'] == 'Yes'].groupby('MaritalStatus').size().reset_index(name='Attrition')
+            plot_donut(maritalStatus_attrition, 'MaritalStatus', 'Attrition', 'MaritalStatus wise Attrition')
+
+# Attrition based on Worklife balance
+with col4:  
+    with st.container(border=False):
+            education_attrition = df[df['Attrition'] == 'Yes'].groupby('WorkLifeBalance').size().reset_index(name='Attrition')
+            plot_histogram(education_attrition, 'Attrition', 'WorkLifeBalance', 'WorkLifeBalance Attrition')
 
 
+# -----------------------------------------------------------------------------------------------------------------------
+col1, col2, col3 = st.columns([1,1,2])
+
+# Monthly Salary based Attrition
+with col1:
+    with st.container(border=False):
+        MonthlyIncome_attrition = df[df['Attrition'] == 'Yes'].groupby('MonthlyIncome').size().reset_index(name='Attrition')
+        plot_histogram(MonthlyIncome_attrition, 'Attrition', 'MonthlyIncome', 'MonthlyIncome Attrition')
+
+# Age Based Attrition
+with col2:
+    with st.container(border=False):
+        Age_attrition = df[df['Attrition'] == 'Yes'].groupby('Age').size().reset_index(name='Attrition')
+        plot_lineChart(Age_attrition,'Age', 'Attrition', 'Age based Attrition')
+
+# Education field based Attrition
+with col3:
+    with st.container(border=False):
+        EducationField_attrition = df[df['Attrition'] == 'Yes'].groupby('EducationField').size().reset_index(name='Attrition')
+        plot_donut(EducationField_attrition, 'EducationField', 'Attrition', 'Education field wise Attrition')
+
+# ============================================================================================================================
+# DATA CLEARNING AND DATA PREPROCESSING 
+# ============================================================================================================================
+
+# Clean dataframe
+# ------------------------------------------------------------------------------------------
+preprocessed_df = clean_data(df)
+
+
+# feature Selection
+# ------------------------------------------------------------------------------------------
+preprocessed_df = select_features(preprocessed_df)
+
+
+# feature Encoding
+# ------------------------------------------------------------------------------------------
+preprocessed_df = encode_features(preprocessed_df)
+
+
+# Split dataset into training and testing
+# ------------------------------------------------------------------------------------------
+X = preprocessed_df.drop(columns=['Attrition'])
+Y = preprocessed_df['Attrition']
+X_train, X_test, Y_train, Y_test = split_data(X,Y)
+
+
+# Feature Scaling
+# ------------------------------------------------------------------------------------------
+X_train_scaled, X_test_scaled = scale_features(X_train, X_test)
 
