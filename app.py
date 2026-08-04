@@ -2,10 +2,13 @@
 # ------------------------------------------------------------------------------------------
 import streamlit as st
 import numpy as np 
+import pandas as pd 
+
 
 # Load Dataset
 # ------------------------------------------------------------------------------------------
 from src.Load_dataset import load_dataset
+
 
 # Import Graphs 
 # ------------------------------------------------------------------------------------------
@@ -16,9 +19,8 @@ from visuals.histogram import plot_histogram
 from visuals.scatterplot import plot_scatterplot
 from visuals.boxplot import plot_boxplot
 from visuals.line_chart import plot_lineChart
-
-
-# ------------------------------------------------------------------------------------------
+from visuals.group_barChart import plot_group_barChart
+from visuals.heatmap import plot_heatmap
 
 
 # Import preprocessing Components
@@ -28,6 +30,14 @@ from src.feature_selection import select_features
 from src.feature_encoding import encode_features
 from src.train_test_split import split_data
 from src.feature_scaling import scale_features
+from src.train_models import train_models
+from src.prediction import model_prediction
+from src.evaluation import model_evaluation
+
+
+# Import User Input
+# ------------------------------------------------------------------------------------------
+from notebooks.user_input import get_user_input
 
 # set page configuration
 # ------------------------------------------------------------------------------------------
@@ -258,3 +268,39 @@ X_train, X_test, Y_train, Y_test = split_data(X,Y)
 # ------------------------------------------------------------------------------------------
 X_train_scaled, X_test_scaled = scale_features(X_train, X_test)
 
+# Train Models
+# ------------------------------------------------------------------------------------------
+scaled_models, normal_models = train_models(X_train, X_train_scaled, Y_train)
+
+# Model Prediction
+# ------------------------------------------------------------------------------------------
+scaled_predictions, normal_predictions = model_prediction(scaled_models, normal_models, X_test, X_test_scaled)
+
+# Model Evaluation
+# ------------------------------------------------------------------------------------------
+evaluation  = model_evaluation(scaled_predictions, normal_predictions, Y_test)
+
+result = pd.DataFrame(evaluation)
+
+
+col1, col2 = st.columns([1,1])
+
+with col1:
+    with st.container(border=False):
+        plot_group_barChart(result, 'Model', ['Accuracy', 'Precision', 'Recall', 'F1'], 'Model Comparison')
+
+with col2:
+    with st.container(border=False):
+        plot_heatmap(result, "Model Performance Heatmap")
+
+# ============================================================================================================================
+# Side Bar (Input Parameters) 
+# ============================================================================================================================
+
+# Get User Input
+# ------------------------------------------------------------------------------------------
+get_user_input()
+
+    
+
+    # 
