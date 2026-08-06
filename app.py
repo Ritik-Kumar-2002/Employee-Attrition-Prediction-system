@@ -37,7 +37,13 @@ from src.evaluation import model_evaluation
 
 # Import User Input
 # ------------------------------------------------------------------------------------------
-from notebooks.user_input import get_user_input
+from src.user_input import get_user_input
+
+
+# Model Selection
+# ------------------------------------------------------------------------------------------
+from src.model_selection import select_best_model
+
 
 # set page configuration
 # ------------------------------------------------------------------------------------------
@@ -49,16 +55,18 @@ st.set_page_config(
 st.header('HR Analytics Dashboard', divider='grey')
 
 
-
 # Load a dataset
 # ------------------------------------------------------------------------------------------
 df = load_dataset()
 
 # Show dataset
-st.write(df)
+# st.write(df)
 
 # KPIS
 # ----------------------------------------------------------------------------------------------------------------------------
+
+# KPI Placeholder
+kpi_placeholder = st.empty()
 
 total_Employees = df.shape[0]
 employee_left  = df[df['Attrition'] == 'Yes'].shape[0] 
@@ -66,8 +74,9 @@ current_attrition_rate = round((employee_left/total_Employees)*100, 1)
 average_age = round(np.mean(df['Age']), 1)
 average_MonthlyIncome = round(np.mean(df['MonthlyIncome'])/1000, 1)
 average_YearAtCompany = round(np.mean(df['YearsAtCompany']), 1)
-best_model='SVM'
-best_modelAccuracy = 89.9
+best_model= ''
+best_modelAccuracy = ''
+
 kpis = [
     ('Total Employees', df.shape[0], ''),
     ('Current Attrition Rate', current_attrition_rate, '%'),
@@ -75,7 +84,7 @@ kpis = [
     ('Average Age', average_age, ''),
     ('Average Monthly Income', average_MonthlyIncome, 'K'),
     ('Average Year at Company',average_YearAtCompany, '' ),
-    ('Best Model Accuracy',  best_modelAccuracy, ''),
+    ('Best Model Accuracy',  best_modelAccuracy, '%'),
     ('Best Model Name', best_model, '' )
 ]
 
@@ -137,16 +146,16 @@ div[data-testid="stMetricValue"] div {
 
 # KPIs Show
 # ------------------------------------------------------------------------------------------
-for row in range(0, len(kpis), 4):
-    cols = st.columns(4)
-    for i in range(4):
-        j = row + i
-        if(j < len(kpis)):
-            with cols[i]:
-                # with st.container(border=True):
-                st.metric(
-                    label=kpis[j][0], 
-                    value=str(kpis[j][1])+kpis[j][2])
+# for row in range(0, len(kpis), 4):
+#     cols = st.columns(4)
+#     for i in range(4):
+#         j = row + i
+#         if(j < len(kpis)):
+#             with cols[i]:
+#                 # with st.container(border=True):
+#                 st.metric(
+#                     label=kpis[j][0], 
+#                     value=str(kpis[j][1])+kpis[j][2])
 
 
     
@@ -281,7 +290,7 @@ scaled_predictions, normal_predictions = model_prediction(scaled_models, normal_
 evaluation  = model_evaluation(scaled_predictions, normal_predictions, Y_test)
 
 result = pd.DataFrame(evaluation)
-
+st.write('Result: ',result)
 
 col1, col2 = st.columns([1,1])
 
@@ -301,6 +310,36 @@ with col2:
 # ------------------------------------------------------------------------------------------
 get_user_input()
 
-    
+# Select Best Model
+# ------------------------------------------------------------------------------------------
+selected_model = select_best_model(result)
+best_model= selected_model['Model']
+# best_modelAccuracy = selected_model['Accuracy']
+best_modelAccuracy = f"{selected_model['Accuracy']*100:.1f}"
 
-    # 
+
+# KPIs Show
+# ------------------------------------------------------------------------------------------
+with kpi_placeholder.container():
+    # KPIs
+    kpis = [
+        ('Total Employees', df.shape[0], ''),
+        ('Current Attrition Rate', current_attrition_rate, '%'),
+        ('Employees Left', employee_left, ''),
+        ('Average Age', average_age, ''),
+        ('Average Monthly Income', average_MonthlyIncome, 'K'),
+        ('Average Year at Company',average_YearAtCompany, '' ),
+        ('Best Model Accuracy',  best_modelAccuracy, '%'),
+        ('Best Model Name', best_model, '' )
+    ]
+    
+    for row in range(0, len(kpis), 4):
+        cols = st.columns(4)
+        for i in range(4):
+            j = row + i
+            if(j < len(kpis)):
+                with cols[i]:
+                    # with st.container(border=True):
+                    st.metric(
+                        label=kpis[j][0], 
+                        value=str(kpis[j][1])+kpis[j][2])

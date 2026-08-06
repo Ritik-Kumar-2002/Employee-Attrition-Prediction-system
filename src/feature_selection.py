@@ -13,6 +13,6 @@ def select_features(df):
 
     # Also delete employee number columns(Not required to train a model)
     # -------------------------------------------------------------------------------
-    df = df.drop(columns = ['EmployeeNumber'])
+    df = df.drop(columns = ['EmployeeNumber', 'TrainingTimesLastYear'])
 
     return df
