@@ -1,6 +1,5 @@
-from sklearn.preprocessing import LabelEncoder
 import pandas as pd
-
+from preprocessing.preprocessing import attrition_encoder, gender_encoder, overtime_encoder
 
 def encode_features(df):
     # ======================================================
@@ -34,13 +33,15 @@ def encode_features(df):
     ]
 
 
-    le = LabelEncoder()
+    # le = LabelEncoder()
     # Binary Encoding  (Label Encoding)
 
-    for col in binary_columns:
-        df[col] = le.fit_transform(df[col])
+    # for col in binary_columns:
+    #     df[col] = label_encoder.fit_transform(df[col])
 
-    # print(df.sample(4))
+    df['Attrition'] = attrition_encoder.fit_transform(df['Attrition'])
+    df['Gender'] = gender_encoder.fit_transform(df['Gender'])
+    df['OverTime'] = overtime_encoder.fit_transform(df['OverTime'])
 
 
     # One hot encoding
@@ -48,7 +49,6 @@ def encode_features(df):
     df = pd.get_dummies(
         df, 
         columns=Ont_hot_Encoding_columns,
-        drop_first=True,
         dtype=int
     )
 

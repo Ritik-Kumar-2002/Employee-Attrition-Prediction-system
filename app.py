@@ -25,24 +25,24 @@ from visuals.heatmap import plot_heatmap
 
 # Import preprocessing Components
 # ------------------------------------------------------------------------------------------
-from src.data_cleaning import clean_data
-from src.feature_selection import select_features
-from src.feature_encoding import encode_features
+from src.preprocessing.data_cleaning import clean_data
+from src.preprocessing.feature_selection import select_features
+from src.preprocessing.feature_encoding import encode_features
 from src.train_test_split import split_data
-from src.feature_scaling import scale_features
-from src.train_models import train_models
-from src.prediction import model_prediction
-from src.evaluation import model_evaluation
+from src.preprocessing.feature_scaling import scale_features
+from src.models.train_models import train_models
+from src.predictions.prediction import model_prediction
+from src.predictions.user_prediction import predict_employee_attrition
+from src.evaluations.evaluation import model_evaluation
 
 
 # Import User Input
 # ------------------------------------------------------------------------------------------
 from src.user_input import get_user_input
 
-
 # Model Selection
 # ------------------------------------------------------------------------------------------
-from src.model_selection import select_best_model
+from src.models.model_selection import select_best_model
 
 
 # set page configuration
@@ -60,7 +60,7 @@ st.header('HR Analytics Dashboard', divider='grey')
 df = load_dataset()
 
 # Show dataset
-# st.write(df)
+st.write(df)
 
 # KPIS
 # ----------------------------------------------------------------------------------------------------------------------------
@@ -271,11 +271,15 @@ preprocessed_df = encode_features(preprocessed_df)
 X = preprocessed_df.drop(columns=['Attrition'])
 Y = preprocessed_df['Attrition']
 X_train, X_test, Y_train, Y_test = split_data(X,Y)
+st.write(X_train)
+st.write(X_train.shape)
 
 
 # Feature Scaling
 # ------------------------------------------------------------------------------------------
 X_train_scaled, X_test_scaled = scale_features(X_train, X_test)
+# st.write('data after scaling', X_train_scaled)
+
 
 # Train Models
 # ------------------------------------------------------------------------------------------
@@ -302,19 +306,21 @@ with col2:
     with st.container(border=False):
         plot_heatmap(result, "Model Performance Heatmap")
 
+
+
 # ============================================================================================================================
 # Side Bar (Input Parameters) 
 # ============================================================================================================================
-
 # Get User Input
 # ------------------------------------------------------------------------------------------
-get_user_input()
+employee_info = get_user_input(X_train.columns)
+if(employee_info is not None) : st.write('Employee Information shape: ', employee_info.shape)
+st.write('Employee Information: ', employee_info)
 
 # Select Best Model
 # ------------------------------------------------------------------------------------------
 selected_model = select_best_model(result)
 best_model= selected_model['Model']
-# best_modelAccuracy = selected_model['Accuracy']
 best_modelAccuracy = f"{selected_model['Accuracy']*100:.1f}"
 
 
@@ -332,7 +338,8 @@ with kpi_placeholder.container():
         ('Best Model Accuracy',  best_modelAccuracy, '%'),
         ('Best Model Name', best_model, '' )
     ]
-    
+
+
     for row in range(0, len(kpis), 4):
         cols = st.columns(4)
         for i in range(4):
@@ -343,3 +350,13 @@ with kpi_placeholder.container():
                     st.metric(
                         label=kpis[j][0], 
                         value=str(kpis[j][1])+kpis[j][2])
+
+
+# Scale User Input
+# ------------------------------------------------------------------------------------------
+
+# Predict Employee Information Result
+# ------------------------------------------------------------------------------------------
+if(employee_info is not None):
+    predict_employee_attrition(employee_info, best_model)
+    # st.write('User Prediction Result', employee_attrition_prediction_result)

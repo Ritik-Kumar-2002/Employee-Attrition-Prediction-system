@@ -1,11 +1,16 @@
 # Import models
 # ------------------------------------------------------------------------------------------
-from sklearn.svm import SVC
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
+# from sklearn.svm import SVC
+# from sklearn.neighbors import KNeighborsClassifier
+# from sklearn.linear_model import LogisticRegression
+# from sklearn.ensemble import RandomForestClassifier
+# from sklearn.tree import DecisionTreeClassifier
 
+from models.svm import svm
+from models.random_forest import rf
+from models.knn import knn
+from models.logistic_regression import lr
+from models.decision_tree import dt
 # ======================================================= 
 # Feature Scaling Required Model
 # -------------------------------------------------------
@@ -27,21 +32,6 @@ from sklearn.tree import DecisionTreeClassifier
 # ======================================================= 
 
 def train_models(X_train, X_train_scaled, Y_train):
-
-    # Support Vector Machine
-    svm = SVC()
-
-    # K Nearest Neighbor 
-    knn = KNeighborsClassifier()
-
-    # Logistic Regression
-    lr = LogisticRegression()
-
-    # Random Forest
-    rf = RandomForestClassifier()
-
-    # Decision Tree
-    dt = DecisionTreeClassifier()
 
     # Scaled Models 
     scaled_models = {
