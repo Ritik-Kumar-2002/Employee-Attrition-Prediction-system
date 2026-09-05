@@ -139,6 +139,7 @@ The dashboard makes the ML results easier to interpret and provides a practical 
 DemoLink
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 https://drive.google.com/file/d/1bYa0dr3iPiG3eGFTM71LCBU7UR90fQ18/view?usp=sharing
+link: https://employee-attrition-prediction-system-gpp7snlvz3nstyhe2e6hxl.streamlit.app/ 
 
 🎯 Future Scope – Explainable AI (XAI)
 --------------------------------------------------------------------------------------------------------------------------------------------------------
