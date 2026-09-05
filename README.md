@@ -136,6 +136,10 @@ Dashboard capabilities include:
 
 The dashboard makes the ML results easier to interpret and provides a practical interface for exploring HR-related insights.
 
+DemoLink
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+https://drive.google.com/file/d/1bYa0dr3iPiG3eGFTM71LCBU7UR90fQ18/view?usp=sharing
+
 🎯 Future Scope – Explainable AI (XAI)
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 Future work includes integrating Explainable AI (XAI) techniques to interpret the model's predictions and identify the key factors influencing an employee's likelihood of leaving the organization. This will improve model transparency and help HR teams make data-driven employee retention decisions.
