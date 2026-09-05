@@ -2,4 +2,4 @@
 
 from sklearn.svm import SVC
 
-svm = SVC()
+svm = SVC(kernel='linear', probability=True)

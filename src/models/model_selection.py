@@ -10,7 +10,7 @@ def select_best_model(df):
         # print(row)
         # print(row.Accuracy)
         
-        eval = 0.4*row.F1 + 0.3*row.Recall + 0.3*row.Precision + 0.1*row.Accuracy
+        eval = 0.4*row.F1 + 0.3*row.Recall + 0.2*row.Precision + 0.1*row.Accuracy
         # print("Result are ", eval)
         # print(f'Eval: {eval} for {row.Model}')
 

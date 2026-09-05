@@ -29,6 +29,8 @@ def get_user_input(feature_col):
         # Daily Rate
         DailyRate = st.number_input(
             'Enter Daily Rate',
+            min_value=102,
+            max_value=1500,
             step=1
         )
 
@@ -84,6 +86,8 @@ def get_user_input(feature_col):
         # HourlyRate
         HourlyRate = st.number_input(
             'Enter Hourly Rate',
+            min_value=30,
+            max_value=100,
             step=1
         )
 
@@ -135,12 +139,16 @@ def get_user_input(feature_col):
 
         # MonthlyIncome
         MonthlyIncome = st.number_input(
-            'Enter your MonthlyIncome'
+            'Enter your MonthlyIncome',
+            value= 6502
         )
 
         # MonthlyRate
         MonthlyRate = st.number_input(
-            'Enter your MonthlyRate'
+            'Enter your MonthlyRate',
+            value= 14313,
+            min_value=2094,
+            max_value=26999
         )
 
         # NumCompaniesWorked
@@ -160,6 +168,7 @@ def get_user_input(feature_col):
         PercentSalaryHike = st.number_input(
             'Salary hike in percent',
             min_value=1,
+            max_value=25,
             step=1
         )
 
@@ -183,7 +192,7 @@ def get_user_input(feature_col):
         StockOptionLevel = st.number_input(
             'Stock Option Level',
             min_value=0,
-            max_value=4,
+            max_value=3,
             value=2
         )
 
@@ -205,8 +214,8 @@ def get_user_input(feature_col):
         # YearsAtCompany
         YearsAtCompany = st.number_input(
             'Years at Company',
-            min_value=1,
-            max_value=4,
+            min_value=0,
+            max_value=40,
             value=2
         )
 

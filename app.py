@@ -59,8 +59,36 @@ st.header('HR Analytics Dashboard', divider='grey')
 # ------------------------------------------------------------------------------------------
 df = load_dataset()
 
+# Dataset Overview
+# ------------------------------------------------------------------------------------------
+st.markdown("""
+<h3 style="
+    text-align:center;
+    color:#003d99;
+    font-size:32px;
+    font-family:Poppins, sans-serif;
+    font-weight:700;
+">
+Dataset Overview
+</h3>
+""", unsafe_allow_html=True)
+raw_df = df.copy()
+
+# Dataset Styling
+def row_color(row):
+    if row.name % 2 == 0:
+        return ['background-color: #EAF2FF'] * len(row)
+    else: 
+        return ['background-color: #FFFFFF'] * len(row)
+
+
+raw_df = raw_df.style.apply(row_color, axis=1)
 # Show dataset
-st.write(df)
+st.dataframe(
+    raw_df,
+    use_container_width=True,
+    height=350
+)
 
 # KPIS
 # ----------------------------------------------------------------------------------------------------------------------------
@@ -271,9 +299,6 @@ preprocessed_df = encode_features(preprocessed_df)
 X = preprocessed_df.drop(columns=['Attrition'])
 Y = preprocessed_df['Attrition']
 X_train, X_test, Y_train, Y_test = split_data(X,Y)
-st.write(X_train)
-st.write(X_train.shape)
-
 
 # Feature Scaling
 # ------------------------------------------------------------------------------------------
@@ -294,7 +319,7 @@ scaled_predictions, normal_predictions = model_prediction(scaled_models, normal_
 evaluation  = model_evaluation(scaled_predictions, normal_predictions, Y_test)
 
 result = pd.DataFrame(evaluation)
-st.write('Result: ',result)
+# st.write('Result: ',result)
 
 col1, col2 = st.columns([1,1])
 
@@ -314,8 +339,6 @@ with col2:
 # Get User Input
 # ------------------------------------------------------------------------------------------
 employee_info = get_user_input(X_train.columns)
-if(employee_info is not None) : st.write('Employee Information shape: ', employee_info.shape)
-st.write('Employee Information: ', employee_info)
 
 # Select Best Model
 # ------------------------------------------------------------------------------------------
@@ -359,4 +382,3 @@ with kpi_placeholder.container():
 # ------------------------------------------------------------------------------------------
 if(employee_info is not None):
     predict_employee_attrition(employee_info, best_model)
-    # st.write('User Prediction Result', employee_attrition_prediction_result)

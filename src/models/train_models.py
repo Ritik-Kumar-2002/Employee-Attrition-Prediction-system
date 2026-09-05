@@ -17,6 +17,7 @@ from models.decision_tree import dt
 # SVM, 
 # KNN, 
 # K Mean Clustering, 
+# Logistic Regression
 # Deep Learning (Back Propagation Algorithm)
 # -------------------------------------------------------
 
@@ -24,7 +25,6 @@ from models.decision_tree import dt
 # ======================================================= 
 # No Feature Scaling Require Model
 # -------------------------------------------------------
-# Logistic Regression
 # Random Forest Classifier  
 # Decision Tree
 # -------------------------------------------------------
@@ -36,12 +36,12 @@ def train_models(X_train, X_train_scaled, Y_train):
     # Scaled Models 
     scaled_models = {
         'SVM': svm,
-        'KNN': knn
+        'KNN': knn,
+        'Logistic Regression': lr
     }
 
     # Normal Models
     normal_models = {
-        'Logistic Regression': lr,
         'Random Forest': rf,
         'Decision Tree': dt 
     }
